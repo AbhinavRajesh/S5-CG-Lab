@@ -6,18 +6,19 @@ from math import pi, sqrt, cos, radians, sin
 import numpy
 
 WINDOW_SIZE = 1000
-TARGET_FPS = 60
-
+TARGET_FPS=60
+GLOBAL_X = GLOBAL_Y = 0
+STATE = 1
+pendulum_length = float(input("Pendulum Length: "))
+BOB_RADIUS = float(input("Bob Radius: "))
+MAX_THETA = float(input("Max Displacement Angle: "))
+THETA = MAX_THETA
+SPEED_MULTIPLIER = float(input("Speed Multiplier: "))
+THETA_INCREMENT = cos(radians(THETA))*SPEED_MULTIPLIER - cos(radians(MAX_THETA))*SPEED_MULTIPLIER*0.9
+ 
 def init():
     glClearColor(0, 0, 0, 1)
     gluOrtho2D(-WINDOW_SIZE, WINDOW_SIZE, -WINDOW_SIZE, WINDOW_SIZE)
-
-def get_details() -> Tuple[float, float, float, float]:
-    pendulum_length = float(input("Enter Pendulum Length: "))
-    bob_radius = float(input("Enter Bob Radius: "))
-    max_displacement_angle = float(input("Enter Max Displacement Angle: "))
-    speed_multiplier = float(input("Enter Speed Multiplier: "))
-    return pendulum_length, bob_radius, max_displacement_angle, speed_multiplier
 
 def draw_circle(x: float, y: float, bob_radius: float):
     i = 0.0        
@@ -27,54 +28,51 @@ def draw_circle(x: float, y: float, bob_radius: float):
         glVertex2f(bob_radius*cos(pi * i / 180.0) + x, bob_radius*sin(pi * i / 180.0) + y)
     glEnd();
 
-def draw_pendulum(global_x: float, global_y: float, bob_radius: float):
+def draw_pendulum():
     glClear(GL_COLOR_BUFFER_BIT) 
     glColor3f(1.0,0.0,0.0) 
     glLineWidth(5)
     glBegin(GL_LINES)
     glVertex2f(0,0)
-    glVertex2f(global_x, global_y)
+    glVertex2f(GLOBAL_X, GLOBAL_Y)
     glEnd()
-    draw_circle(global_x, global_y, bob_radius)
+    draw_circle(GLOBAL_X, GLOBAL_Y, BOB_RADIUS)
     glutSwapBuffers()
 
-def update(state: int, theta: float, max_theta: float, theta_increment: float, pendulum_length: float, speed_multiplier: float, global_x: float, global_y: float):
+def update(value):
+    global GLOBAL_X
+    global GLOBAL_Y
+    global STATE
+    global THETA
+    global MAX_THETA
+    global THETA_INCREMENT
     glutPostRedisplay()
     glutTimerFunc(int(1000/TARGET_FPS),update,int(0))
-    if(state == 1):
-        if(theta<max_theta):
-            theta = theta + theta_increment
+    if(STATE == 1):
+        if(THETA < MAX_THETA):
+            THETA = THETA + THETA_INCREMENT
         else:
-            state =-1
-    elif(state == -1):
-        if(theta >= -max_theta):
-            theta = theta - theta_increment
+            STATE = -1
+    elif(STATE == -1):
+        if(THETA >= -MAX_THETA):
+            THETA = THETA - THETA_INCREMENT
 
         else:
-            state=1
-    global_x = pendulum_length * sin(radians(theta))
-    global_y = - (pendulum_length * cos(radians(theta)))
-    theta_increment =  (cos(radians(theta))*speed_multiplier)-(cos(radians(MAX_THETA))*(SPEED_MULTIPLIER*0.9))
-
-def display_window(theta: float, max_theta: float, theta_increment: float, pendulum_length: float, speed_multiplier: float, bob_radius: float):
-    global_x = global_y = 0
-    state = 1
-    glutInit(sys.argv)
-    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE)
-    glutInitWindowSize(WINDOW_SIZE/2, WINDOW_SIZE/2)
-    glutInitWindowPosition(0,0)
-    glutCreateWindow("Pendulum")
-    glutDisplayFunc(lambda: draw_pendulum(global_x, global_y, bob_radius))
-    glutTimerFunc(0, lambda: update(state, theta, max_theta, theta_increment, pendulum_length, speed_multiplier, global_x, global_y), 0)
-    glutIdleFunc(lambda: draw_pendulum(global_x, global_y, bob_radius))
-    init()
-    glutMainLoop()
+            STATE = 1
+    GLOBAL_X = pendulum_length * sin(radians(THETA))
+    GLOBAL_Y = - (pendulum_length * cos(radians(THETA)))
+    THETA_INCREMENT =  (cos(radians(THETA))*SPEED_MULTIPLIER)-(cos(radians(MAX_THETA))*(SPEED_MULTIPLIER*0.9))
 
 def main():
-    pendulum_length, bob_radius, max_theta, speed_multiplier = get_details()
-    theta = max_theta
-    theta_increment = cos(radians(theta))*speed_multiplier - cos(radians(max_theta))*speed_multiplier*0.9
-    display_window(theta, max_theta, theta_increment, pendulum_length, speed_multiplier, bob_radius)
-
+    glutInit(sys.argv)
+    glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE)
+    glutInitWindowSize(500, 500)
+    glutInitWindowPosition(0,0)
+    glutCreateWindow("Pendulum")
+    glutDisplayFunc(draw_pendulum)
+    glutTimerFunc(0, update, 0)
+    glutIdleFunc(draw_pendulum)
+    init()
+    glutMainLoop()
 if __name__ == "__main__":
     main()

@@ -18,7 +18,7 @@ def plot_points(points): # Function to plot the points
     for point in points:
         glVertex2f(point[0], point[1])
     glEnd()
-    glFlush()                                  
+    glFlush()
 
 def display_menu(): # Function to display menu
     print("-----Menu-----")

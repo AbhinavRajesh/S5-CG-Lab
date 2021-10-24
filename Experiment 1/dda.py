@@ -34,7 +34,7 @@ def plot_line(x1, y1, x2, y2): # Function to plot line using DDA
     y_increment = deltaY/steps
 
     glClear(GL_COLOR_BUFFER_BIT)
-    glColor3f(1.0,0.0,0.0)
+    glColor3f(0.0,1.0,0.0)
     glPointSize(10.0)
     glBegin(GL_POINTS)
 
@@ -56,7 +56,7 @@ def display_window(x1, y1, x2, y2): # Function to display window
     glutInitWindowPosition(50, 50)
     glutCreateWindow("Plot Line using DDA Algorithm")
     glutDisplayFunc(lambda: plot_line(x1,y1,x2,y2)) 
-    glutIdleFunc(lambda: plot_line(x1,y1,x2,y2))
+    # glutIdleFunc(lambda: plot_line(x1,y1,x2,y2))
     init()
     glutMainLoop()
 

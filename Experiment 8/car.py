@@ -139,8 +139,7 @@ class Car:
             if self.speed < 0:
                 self.speed = 0 
         elif key == b"h":
-            playsound.playsound("/home/abhinav/Documents/College/S5/CG Lab/Experiment 8/horn.mp3", block=False)
-
+            playsound.playsound("./horn.mpeg", block=False)
 
 def main():
     car = Car()

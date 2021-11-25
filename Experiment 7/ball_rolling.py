@@ -51,6 +51,10 @@ def update(value):
     if X > WINDOW_SIZE - RADIUS:
         TO_RIGHT = False
     elif X < -WINDOW_SIZE + RADIUS:
+        TO_RIGHT = True
+    if Y > WINDOW_SIZE - RADIUS * sin(radians(ANGLE)):
+        TO_RIGHT = False
+    elif Y < -WINDOW_SIZE + RADIUS * cos(radians(ANGLE)):
         TO_RIGHT = True    
     glutPostRedisplay()
     glutTimerFunc(int(1000/60), update, 0)
@@ -66,7 +70,7 @@ def draw_circle(x, y):
 def display():
     global X, Y
     create_line()
-    draw_circle(X + RADIUS * sin(radians(ANGLE)), Y + RADIUS * cos(radians(ANGLE)))
+    draw_circle(X + RADIUS * sin(radians(-ANGLE)), Y + RADIUS * cos(radians(-ANGLE)))
     glutSwapBuffers()
 
 def main():

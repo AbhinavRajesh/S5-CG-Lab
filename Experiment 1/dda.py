@@ -38,7 +38,7 @@ def plot_line(x1, y1, x2, y2): # Function to plot line using DDA
     glPointSize(10.0)
     glBegin(GL_POINTS)
 
-    for step in range(1, steps+1):
+    for _ in range(steps):
         # Round the values and plot the points
         glVertex2f(round(x1), round(y1))
         # Increment the points

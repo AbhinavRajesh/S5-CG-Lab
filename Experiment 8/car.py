@@ -100,8 +100,9 @@ class Car:
         glEnd()
 
     def display(self):
-        x = (self.start_point[0] * cos(radians(self.angle)) - self.start_point[1] * sin(radians(self.angle)))
-        y = (self.start_point[0] * sin(radians(self.angle)) + self.start_point[1] * cos(radians(self.angle)))
+        # x = (self.start_point[0] * cos(radians(self.angle)) - self.start_point[1] * sin(radians(self.angle)))
+        # y = (self.start_point[0] * sin(radians(self.angle)) + self.start_point[1] * cos(radians(self.angle)))
+        x, y = self.get_rotated_points([[self.start_point[0], self.start_point[1]]])[0]
         self.create_line()
         self.draw_car(x, y)
         glutSwapBuffers()

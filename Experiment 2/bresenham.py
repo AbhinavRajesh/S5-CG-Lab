@@ -48,8 +48,6 @@ def get_points(x1, y1, x2, y2):
     # Points calculated using Bresenham's Algorithm
     points = []
 
-    x, y = x1, y1
-
     deltaX = x2 - x1 
     deltaY = y2 - y1
 
